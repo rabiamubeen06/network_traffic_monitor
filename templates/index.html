@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Traffic Monitoring Platform</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+    <header>
+        <h1>UNIVERSITY LAN TRAFFIC MONITOR</h1>
+    </header>
+
+    <section class="options">
+        <button class="btn Start">Start Monitoring</button>
+        <button class="btn Stop" disabled>Stop Monitoring</button>
+        <button class="btn Clear">Clear</button>
+        <button class="btn Analyze">Analyze</button>
+        <button class="btn btn-show-logs" id="showLogsBtn">&#9776; Show Logs</button>
+    </section>
+
+    <section class="Filters">
+        <span class="filter-label">FILTER:</span>
+        <select id="filterProtocol" class="filter-input">
+            <option value="">All Protocols</option>
+            <option value="TCP">TCP</option>
+            <option value="UDP">UDP</option>
+            <option value="ICMP">ICMP</option>
+        </select>
+        <input type="text" id="filterSrcIP" class="filter-input" placeholder="Source IP" maxlength="15" />
+        <input type="text" id="filterDstIP" class="filter-input" placeholder="Destination IP" maxlength="15" />
+
+        <button class="btn btn-filter">Filter</button>
+        <button class="btn btn-names">Show Names</button>
+        <button class="btn btn-reset">&#8635; Reset</button>
+    </section>
+
+    <div class="status-bar">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">IDLE</span>
+    </div>
+
+    <section class="traffic-header">
+        <h2 class="traff-title">&#9672; Live Traffic</h2>
+        <span id="recordCount">0 records</span>
+    </section>
+
+    <section class="traffic-table">
+        <table id="traffic">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Source IP</th>
+                    <th>Destination IP</th>
+                    <th>Protocol</th>
+                    <th>Packet Size</th>
+                    <th>Src Port</th>
+                    <th>Dst Port</th>
+                    <th>Service</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="trafficBody">
+                <tr class="empty-row">
+                    <td colspan="9">No traffic data. Press START MONITORING.</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="stats-container">
+        <div class="stats-header">
+            <h2 class="stats-title">&#9672; Statistics</h2>
+        </div>
+        <div class="STATISTICS">
+            <div class="packet_no">
+                <h3 class="total">Total Packets</h3>
+                <span id="packet_count">0</span>
+            </div>
+            <div class="packet_size">
+                <h3 class="size">Average Packet Size</h3>
+                <span id="avg_size">0 B</span>
+            </div>
+            <div class="Protocols">
+                <h3 id="per">Packets per Protocol</h3>
+                <span class="TCP">TCP <span id="tcp">0</span></span>
+                <span class="UDP">UDP <span id="udp">0</span></span>
+                <span class="ICMP">ICMP <span id="icmp">0</span></span>
+            </div>
+            <div class="ports">
+                <h3 class="port">Top Services</h3>
+            </div>
+            <div class="source">
+                <h3 class="src">Top Src IPs</h3>
+            </div>
+            <div class="dest">
+                <h3 class="dst">Top Dest IPs</h3>
+            </div>
+
+            <div class="layers">
+                <h3 class="layers-title">&#127760; OSI Protocol Layers</h3>
+                <div class="layers-grid">
+                    <div class="layer-item">
+                        <span class="layer-badge l2">L2</span>
+                        <div class="layer-info">
+                            <span class="layer-name">Data Link</span>
+                            <span class="layer-protos">Ethernet &bull; ARP &bull; MAC</span>
+                        </div>
+                    </div>
+                    <div class="layer-item">
+                        <span class="layer-badge l3">L3</span>
+                        <div class="layer-info">
+                            <span class="layer-name">Network</span>
+                            <span class="layer-protos">IP &bull; <strong>ICMP</strong> &bull; IGMP</span>
+                        </div>
+                    </div>
+                    <div class="layer-item">
+                        <span class="layer-badge l4">L4</span>
+                        <div class="layer-info">
+                            <span class="layer-name">Transport</span>
+                            <span class="layer-protos"><strong>TCP</strong> &bull; <strong>UDP</strong> &bull; SCTP</span>
+                        </div>
+                    </div>
+                    <div class="layer-item">
+                        <span class="layer-badge l5">L5</span>
+                        <div class="layer-info">
+                            <span class="layer-name">Session</span>
+                            <span class="layer-protos">NetBIOS &bull; RPC &bull; PPTP</span>
+                        </div>
+                    </div>
+                    <div class="layer-item">
+                        <span class="layer-badge l6">L6</span>
+                        <div class="layer-info">
+                            <span class="layer-name">Presentation</span>
+                            <span class="layer-protos">SSL/TLS &bull; MIME &bull; ASCII</span>
+                        </div>
+                    </div>
+                    <div class="layer-item">
+                        <span class="layer-badge l7">L7</span>
+                        <div class="layer-info">
+                            <span class="layer-name">Application</span>
+                            <span class="layer-protos"><strong>HTTP</strong> &bull; <strong>HTTPS</strong> &bull; <strong>DNS</strong> &bull; <strong>SMTP</strong> &bull; <strong>SSH</strong> &bull; <strong>FTP</strong> &bull; <strong>MySQL</strong> &bull; <strong>RDP</strong> &bull; NTP &bull; SNMP</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="layers-note"><strong>Bold</strong> = protocols actively monitored in this session</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="logs-container" id="logsContainer">
+        <div class="logs-header">
+            <h2 class="logs-title">&#9632; Captured Packet Logs</h2>
+            <div class="logs-header-right">
+                <span id="logCount" class="log-count">0 entries</span>
+
+            </div>
+        </div>
+        <div class="logs-table-wrap">
+            <table id="logsTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Time</th>
+                        <th>Source IP</th>
+                        <th>Destination IP</th>
+                        <th>Protocol</th>
+                        <th>Packet Size</th>
+                        <th>Src Port</th>
+                        <th>Dst Port</th>
+                        <th>Service</th>
+                    </tr>
+                </thead>
+                <tbody id="logsBody">
+                    <tr class="empty-row">
+                        <td colspan="10">No log entries yet. Start monitoring to capture packets.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <script src="/static/script.js"></script>
+</body>
+
+</html>

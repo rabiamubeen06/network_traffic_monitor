@@ -1,6 +1,5 @@
-================================================================================
+
   NETWORK TRAFFIC MONITOR — README
-================================================================================
 
 PROJECT OVERVIEW
 ----------------
@@ -13,10 +12,7 @@ anomalous or malicious activity using a rule-based analysis engine.
 The system is built with a Python/Flask backend and a vanilla HTML + CSS + JS
 frontend. No external JavaScript frameworks are used.
 
-
---------------------------------------------------------------------------------
-FILE STRUCTURE
---------------------------------------------------------------------------------
+FILE STRUCTURE:
 
   main.py          — Flask backend: packet simulation, analysis engine, REST API
   index.html       — Single-page frontend (served via Flask template)
@@ -25,11 +21,7 @@ FILE STRUCTURE
   traffic_log.csv  — Live captured-packets file (auto-created, clearable)
   session_log.csv  — Persistent session log (auto-created, NOT clearable)
 
-
---------------------------------------------------------------------------------
-ARCHITECTURE
---------------------------------------------------------------------------------
-
+ARCHITECTURE:
 SUBNETS
   192.168.1.x  — Infrastructure / Destination servers (5 fixed nodes)
   192.168.2.x  — User devices / Source clients (200 dynamic IPs)
@@ -49,10 +41,7 @@ USER DEVICE POOLS (192.168.2.x)
 Each IP is permanently bound to a role for the duration of a monitoring
 session. Role assignments are re-generated fresh on every new Start.
 
-
---------------------------------------------------------------------------------
 BACKEND — main.py
---------------------------------------------------------------------------------
 
 PACKET GENERATION PIPELINE
   Every second the background thread generates 3 packets plus their bidirectional
@@ -142,7 +131,6 @@ REST API ENDPOINTS
 
 --------------------------------------------------------------------------------
 FRONTEND — index.html + style.css + script.js
---------------------------------------------------------------------------------
 
 UI LAYOUT
   Header          Application title bar
@@ -182,10 +170,7 @@ OSI REFERENCE PANEL
   A static reference card at the bottom of the Statistics section lists all
   7 OSI layers with the protocols relevant to this platform highlighted in bold.
 
-
---------------------------------------------------------------------------------
 DATA FILE — traffic_log.csv
---------------------------------------------------------------------------------
 
 CSV columns (9 fields):
   timestamp    HH:MM:SS of packet capture
